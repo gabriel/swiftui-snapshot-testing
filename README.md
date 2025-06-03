@@ -19,14 +19,6 @@ dependencies: [
 ]
 ```
 
-## Usage
-
-Import the package in your test files:
-
-```swift
-import SwiftUISnapshotTesting
-```
-
 ### Testing SwiftUI Views
 
 ```swift
@@ -37,7 +29,7 @@ import Testing
 @Test @MainActor
 func testMyView() throws {
     let view = MyView()
-    assertSnapshot(of: view)
+    assertSnapshot(view: view)
 }
 ```
 
@@ -46,6 +38,7 @@ func testMyView() throws {
 - Support for both iOS and macOS platforms
 - Easy integration with existing snapshot testing workflows
 - Automatic handling of SwiftUI view rendering
+- Includes model identifier and os version in snapshot file name
 
 ## License
 
