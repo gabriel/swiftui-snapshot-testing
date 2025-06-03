@@ -7,8 +7,23 @@ import Testing
 #endif
 
 @MainActor
-public func assertSnapshot(view: some View, testName: String = #function) {
-    assertSnapshot(of: view, as: .imageRender, testName: "\(testName).\(platformLabel)")
+public func assertSnapshot(
+    view: some View,
+    fileID: StaticString = #fileID,
+    file: StaticString = #filePath,
+    testName: String = #function,
+    line: UInt = #line,
+    column: UInt = #column
+) {
+    assertSnapshot(
+        of: view,
+        as: .imageRender,
+        fileID: fileID,
+        file: file,
+        testName: "\(testName).\(platformLabel)",
+        line: line,
+        column: column
+    )
 }
 
 @MainActor
@@ -29,7 +44,7 @@ var platformLabel: String {
     extension UIDevice {
         var modelIdentifier: String {
             #if targetEnvironment(simulator)
-                // Get simulator name from environment
+                /// Get simulator name from environment
                 let simulatorName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] ?? "Simulator"
                 return simulatorName.replacingOccurrences(of: " ", with: "_")
             #else
@@ -37,11 +52,10 @@ var platformLabel: String {
                 uname(&systemInfo)
                 let mirror = Mirror(reflecting: systemInfo.machine)
 
-                let identifier = mirror.children.reduce("") { identifier, element in
+                return mirror.children.reduce("") { identifier, element in
                     guard let value = element.value as? Int8, value != 0 else { return identifier }
                     return identifier + String(UnicodeScalar(UInt8(value)))
                 }
-                return identifier
             #endif
         }
     }
