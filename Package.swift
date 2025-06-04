@@ -22,14 +22,14 @@ let package = Package(
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ],
             path: "Sources",
-            exclude: ["__Snapshots__"]
         ),
         .testTarget(
             name: "SwiftUISnapshotTestingTests",
             dependencies: [
                 "SwiftUISnapshotTesting"
             ],
-            path: "Tests"
+            path: "Tests",
+            exclude: ["__Snapshots__"]
         )
     ]
 )

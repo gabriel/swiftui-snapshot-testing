@@ -38,6 +38,7 @@
                 .init { callback in
                     let renderer = ImageRenderer(content: view)
                     renderer.scale = 2.0
+                    renderer.proposedSize = ProposedViewSize(width: 400, height: 1000)
                     callback(renderer.uiImage ?? UIImage())
                 }
             }

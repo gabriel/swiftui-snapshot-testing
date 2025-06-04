@@ -26,9 +26,20 @@ import SwiftUI
 import SwiftUISnapshotTesting
 import Testing
 
+// To test pure SwiftUI view, use assertRender (which uses ImageRenderer).
 @Test @MainActor
-func testMyView() throws {
+func testMyViewRender() throws {
     let view = MyView()
+    assertRender(view: view)
+}
+
+// To test SwiftUI views that wrap UIKit, you can't use assertRender, so use assertSnapshot.
+@Test @MainActor
+func testMyViewSnapshot() throws {
+    let view = NavigationStack {
+        MyView()
+    }
+    .frame(width: 300, height: 200)
     assertSnapshot(view: view)
 }
 ```
@@ -56,4 +67,24 @@ swift test
 
 ```sh
 xcodebuild test -scheme SwiftUISnapshotTesting -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'
+# Or
+swift test --ios # With zsh plugin below
+```
+
+## ZSH plugin for `swift test --ios`
+
+```sh
+mkdir -p ~/.oh-my-zsh/custom/plugins/swift-ios-test
+cp swift-ios-test.plugin.zsh ~/.oh-my-zsh/custom/plugins/swift-ios-test/swift-ios-test.plugin.zsh
+
+# Add swift-ios-test to .zshrc
+# plugins=(git swift-ios-test ...)
+
+source ~/.zshrc
+```
+
+Then..
+
+```sh
+swift test --ios
 ```
