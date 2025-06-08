@@ -7,7 +7,7 @@ import Testing
 /// - Parameters:
 ///   - timeout: The amount of time to wait to evaluate the expression.
 ///   - expression: An expression of Boolean type.
-public func expect(
+public func expression(
   timeout: TimeInterval = 1.0,
   _ expression: @MainActor @escaping () async throws -> Bool
 )

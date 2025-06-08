@@ -36,7 +36,7 @@ func testAsyncTask() async throws {
   // Loading
   await assertRender(view: view)
 
-  try #require(await expect { model.loaded })
+  try #require(await expression { model.loaded })
 
   // Loaded
   await assertRender(view: view)

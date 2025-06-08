@@ -4,7 +4,7 @@ A Swift package that provides snapshot testing capabilities for SwiftUI views on
 
 - For pure SwiftUI views use `assertRender(view: view)`.
 - For UIKit based SwiftUI views, use `assertSnapshot(view: view)`.
-- For view task expectation, use `try #require(await expect { model.loaded })`
+- To wait for view tasks, use `try #require(await expression { model.loaded })`
 
 ## Requirements
 
@@ -60,7 +60,7 @@ func testAsyncTask() async throws {
   await assertRender(view: view)
  
   // Wait for model load
-  try #require(await expect { model.loaded })
+  try #require(await expression { model.loaded })
 
   // Loaded
   await assertRender(view: view)
