@@ -2,6 +2,10 @@
 
 A Swift package that provides snapshot testing capabilities for SwiftUI views on both iOS and macOS platforms. This package extends the functionality of [swift-snapshot-testing](https://github.com/pointfreeco/swift-snapshot-testing) to make it easier to test SwiftUI views.
 
+- For pure SwiftUI views use `assertRender(view: view)`.
+- For UIKit based SwiftUI views, use `assertSnapshot(view: view)`.
+- For view task expectation, use `try #require(await expect { model.loaded })`
+
 ## Requirements
 
 - iOS 16.0+ / macOS 15.0+
@@ -44,12 +48,29 @@ func testMyViewSnapshot() throws {
 }
 ```
 
+### Testing with Async Tasks
+
+```swift
+@Test
+func testAsyncTask() async throws {
+  let model = await MyViewModel()
+  let view = MyView(model: model)
+
+  // Loading
+  await assertRender(view: view)
+ 
+  // Wait for model load
+  try #require(await expect { model.loaded })
+
+  // Loaded
+  await assertRender(view: view)
+}
+```
+
 ## Features
 
-- Support for both iOS and macOS platforms
-- Easy integration with existing snapshot testing workflows
-- Automatic handling of SwiftUI view rendering
-- Includes model identifier and os version in snapshot file name
+- Support for both iOS and macOS platforms, via `swift test` and `xcodebuild test`.
+- Async expectation/wait for View tasks.
 
 ## License
 
