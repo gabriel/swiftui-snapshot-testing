@@ -18,9 +18,9 @@ struct MyView: View {
     }
 }
 
-@Observable @MainActor
-class MyViewModel {
-    var loaded = false
+@MainActor
+class MyViewModel: ObservableObject {
+    @Published var loaded = false
 
     func load() async throws {
         try await Task.sleep(for: .milliseconds(100))

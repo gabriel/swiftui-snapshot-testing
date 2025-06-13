@@ -38,7 +38,8 @@
                 .init { callback in
                     let renderer = ImageRenderer(content: view)
                     renderer.scale = 4.0 // Large to avoid pixelation?
-                    callback(renderer.nsImage ?? NSImage())
+                    renderer.proposedSize = ProposedViewSize(width: 1024, height: 768)
+                    callback(renderer.nsImage ?? NSImage(size: .zero))
                 }
             }
         }

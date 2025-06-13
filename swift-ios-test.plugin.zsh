@@ -8,11 +8,8 @@
 #
 # source ~/.zshrc
 
-
-cat << 'EOF' > ~/.oh-my-zsh/custom/plugins/swift-ios-test/swift-ios-test.plugin.zsh
-# Override `swift test --ios`
 swift() {
-  if [[ "$1" == "test" && "$2" == "--ios" ]]; then
+  if [[ "$1" == "test" && " ${@} " =~ " --ios " ]]; then
     # Extract target name from Package.swift
     scheme=$(
       grep -A 2 "\.library(" Package.swift \
@@ -21,27 +18,40 @@ swift() {
     )
 
     # find the latest iPhone device name
-    device=$(
+    device=${SWIFT_IOS_TEST_DEVICE_NAME:-$(
       xcrun simctl list devices available \
         | grep -oE 'iPhone [0-9]+' \
         | sort -V \
         | tail -n1
-    )
+    )}
 
     # find the latest iOS runtime
-    os=$(
+    os=${SWIFT_IOS_TEST_OS:-$(
       xcrun simctl list runtimes \
         | grep -Eo 'iOS [0-9]+\.[0-9]+' \
         | sed 's/iOS //' \
         | sort -V \
         | tail -n1
+    )}
+
+    local -a xcodebuild_cmd=(
+      "xcodebuild" "test"
+      "-scheme" "$scheme"
+      "-destination" "platform=iOS Simulator,name=$device,OS=$os"
     )
 
-    xcodebuild test \
-      -scheme "$scheme" \
-      -destination "platform=iOS Simulator,name=$device,OS=$os"
+    # This doesn't really work with SPM packages
+    local -a args=("$@")
+    local filter_index=${args[(i)--filter]}
+    if (( filter_index <= ${#args} )); then
+      local filter_value=${args[filter_index+1]}
+      if [[ -n "$filter_value" ]]; then
+        xcodebuild_cmd+=("-only-testing:${filter_value}")
+      fi
+    fi
+
+    "${xcodebuild_cmd[@]}"
   else
     command swift "$@"
   fi
 }
-EOF
