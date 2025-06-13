@@ -1,3 +1,14 @@
+# To install:
+#
+# mkdir -p ~/.oh-my-zsh/custom/plugins/swift-ios-test
+# cp swift-ios-test.plugin.zsh ~/.oh-my-zsh/custom/plugins/swift-ios-test/swift-ios-test.plugin.zsh
+#
+# # Add swift-ios-test to .zshrc
+# plugins=(git swift-ios-test ...)
+#
+# source ~/.zshrc
+
+
 cat << 'EOF' > ~/.oh-my-zsh/custom/plugins/swift-ios-test/swift-ios-test.plugin.zsh
 # Override `swift test --ios`
 swift() {
