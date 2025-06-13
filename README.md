@@ -19,7 +19,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/gabriel/swiftui-snapshot-testing", from: "1.0.0")
+    .package(url: "https://github.com/gabriel/swiftui-snapshot-testing", from: "0.1.1")
 ]
 
 .testTarget(
