@@ -1,6 +1,6 @@
 # SwiftUI Snapshot Testing
 
-A Swift package that provides snapshot testing capabilities for SwiftUI views on both iOS and macOS platforms. This package extends the functionality of [swift-snapshot-testing](https://github.com/pointfreeco/swift-snapshot-testing) to make it easier to test SwiftUI views.
+A Swift package that provides snapshot testing capabilities for SwiftUI views on both iOS and macOS platforms. This package extends the functionality of [swift-snapshot-testing](https://github.com/pointfreeco/swift-snapshot-testing) to make it easier to test cross platform SwiftUI views.
 
 - For pure SwiftUI views use `assertRender(view: view)`.
 - For UIKit based SwiftUI views, use `assertSnapshot(view: view)`.
