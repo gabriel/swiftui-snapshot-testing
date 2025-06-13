@@ -21,6 +21,12 @@ Add the following to your `Package.swift` file:
 dependencies: [
     .package(url: "https://github.com/gabriel/swiftui-snapshot-testing", from: "1.0.0")
 ]
+
+.testTarget(
+    dependencies: [
+        .product(name: "SwiftUISnapshotTesting", package: "swiftui-snapshot-testing"),
+    ]
+)
 ```
 
 ### Testing SwiftUI Views
