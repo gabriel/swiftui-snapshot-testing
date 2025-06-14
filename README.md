@@ -40,7 +40,15 @@ import Testing
 @Test @MainActor
 func testMyViewRender() throws {
     let view = MyView()
-    assertRender(view: view)
+    // All platforms with specific size
+    assertRender(view: view, device: .size(400, 400))
+
+    // iOS with size
+    assertRender(view: view, device: .iOS(width: 400, height: 1000))
+    // macOS with size
+    assertRender(view: view, device: .macOS(width: 1200, height: 800))
+    // All platforms with default size
+    assertRender(view: view, device: .any)
 }
 
 // To test SwiftUI views that wrap UIKit, you can't use assertRender, so use assertSnapshot.
@@ -48,9 +56,16 @@ func testMyViewRender() throws {
 func testMyViewSnapshot() throws {
     let view = NavigationStack {
         MyView()
-    }
-    .frame(width: 300, height: 200)
-    assertSnapshot(view: view)
+    }    
+    // All platforms with specific size
+    assertSnapshot(view: view, device: .size(400, 400))
+
+    // iOS with size
+    assertSnapshot(view: view, device: .iOS(width: 400, height: 1000))
+    // macOS with size
+    assertSnapshot(view: view, device: .macOS(width: 1200, height: 800))
+    // All platforms with default size
+    assertSnapshot(view: view, device: .any)
 }
 ```
 
@@ -63,13 +78,13 @@ func testAsyncTask() async throws {
   let view = MyView(model: model)
 
   // Loading
-  await assertRender(view: view)
+  await assertRender(view: view, device: .any)
  
   // Wait for model load
   try #require(await expression { model.loaded })
 
   // Loaded
-  await assertRender(view: view)
+  await assertRender(view: view, device: .any)
 }
 ```
 

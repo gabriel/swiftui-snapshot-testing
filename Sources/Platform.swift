@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 @MainActor
 var platformLabel: String {
@@ -36,3 +37,38 @@ var platformLabel: String {
         }
     }
 #endif
+
+public enum SnapshotDevice {
+    case iOS(width: CGFloat, height: CGFloat)
+    case macOS(width: CGFloat, height: CGFloat)
+    case size(_ width: CGFloat, _ height: CGFloat)
+    case any
+
+    var width: CGFloat {
+        switch self {
+        case let .iOS(width, _): return width
+        case let .macOS(width, _): return width
+        case let .size(width, _): return width
+        case .any:
+            #if os(iOS)
+                return 390
+            #elseif os(macOS)
+                return 1200
+            #endif
+        }
+    }
+
+    var height: CGFloat {
+        switch self {
+        case let .iOS(_, height): return height
+        case let .macOS(_, height): return height
+        case let .size(_, height): return height
+        case .any:
+            #if os(iOS)
+                return 844
+            #elseif os(macOS)
+                return 1000
+            #endif
+        }
+    }
+}

@@ -6,14 +6,13 @@ import Testing
 @Test @MainActor
 func testTextViewSnapshot() throws {
     let view = Text("Hello, world!")
-        .frame(width: 300, height: 200)
-    assertSnapshot(view: view)
+    assertSnapshot(view: view, device: .size(300, 200))
 }
 
 @Test @MainActor
 func testTextViewRender() throws {
     let view = Text("Hello, world!")
-    assertRender(view: view)
+    assertRender(view: view, device: .size(300, 200))
 }
 
 @Test @MainActor
@@ -23,19 +22,16 @@ func testSomeLongView() throws {
             Text("Item \(index)")
         }
     }
-    .frame(width: 300, height: 2000)
-    assertSnapshot(view: view)
+    assertSnapshot(view: view, device: .iOS(width: 300, height: 2000))
 }
 
-#if os(macOS)
-    @Test @MainActor
-    func testScrollView() throws {
-        let view = ScrollView {}
-        assertSnapshot(view: view)
-    }
-#endif
+@Test @MainActor
+func testScrollView() throws {
+    let view = ScrollView {}
+    assertSnapshot(view: view, device: .macOS(width: 800, height: 600))
+}
 
-struct NavigationView: View {
+struct NavigationTestView: View {
     var body: some View {
         NavigationStack {
             VStack {
@@ -47,33 +43,25 @@ struct NavigationView: View {
 
 @Test @MainActor
 func testNavigationStackSnapshot() throws {
-    let view = NavigationView()
-        .frame(width: 600, height: 1000)
-    assertSnapshot(view: view)
+    let view = NavigationTestView()
+    assertSnapshot(view: view, device: .iOS(width: 400, height: 1000))
+    assertSnapshot(view: view, device: .macOS(width: 1200, height: 800))
 }
 
 @Test @MainActor
 func testNavigationStackRender() throws {
-    let view = NavigationView()
-    assertRender(view: view)
+    let view = NavigationTestView()
+    assertRender(view: view, device: .macOS(width: 1200, height: 800))
 }
 
 @Test @MainActor
 func testNavigationSplitViewSnapshot() throws {
-    let view = SplitView()
-        .frame(width: 1000, height: 1000)
-    assertSnapshot(view: view)
+    let view = SplitTestView()
+    assertSnapshot(view: view, device: .iOS(width: 400, height: 1000))
+    assertSnapshot(view: view, device: .macOS(width: 1200, height: 800))
 }
 
-// Render is not supported on UIKit views
-// @Test @MainActor
-// func testNavigationSplitViewRender() throws {
-//     let view = SplitView()
-//         .frame(width: 1000, height: 1000)
-//     assertRender(view: view)
-// }
-
-struct SplitView: View {
+struct SplitTestView: View {
     var body: some View {
         NavigationSplitView {
             Text("Sidebar")

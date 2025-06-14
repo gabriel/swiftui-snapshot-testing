@@ -34,10 +34,10 @@ func testAsyncTask() async throws {
     let view = MyView(model: model)
 
     // Loading
-    await assertRender(view: view)
+    await assertRender(view: view, device: .any)
 
     try #require(await expression { model.loaded })
 
     // Loaded
-    await assertRender(view: view)
+    await assertRender(view: view, device: .any)
 }

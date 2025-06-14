@@ -6,14 +6,23 @@ import SwiftUI
     @MainActor
     public func assertSnapshot(
         view: some View,
+        device: SnapshotDevice,
         fileID: StaticString = #fileID,
         file: StaticString = #filePath,
         testName: String = #function,
         line: UInt = #line,
         column: UInt = #column
     ) {
+        switch device {
+        case .iOS: ()
+        case .any: ()
+        default:
+            // Noop
+            return
+        }
+
         assertSnapshot(
-            of: view,
+            of: view.frame(width: device.width, height: device.height),
             as: .image,
             fileID: fileID,
             file: file,
@@ -26,14 +35,23 @@ import SwiftUI
     @MainActor
     public func assertSnapshot(
         view: some View,
+        device: SnapshotDevice,
         fileID: StaticString = #fileID,
         file: StaticString = #filePath,
         testName: String = #function,
         line: UInt = #line,
         column: UInt = #column
     ) {
-        let hostingVC = NSHostingController(rootView: view)
-        hostingVC.view.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
+        switch device {
+        case .macOS: ()
+        case .any: ()
+        default:
+            // Noop
+            return
+        }
+
+        let hostingVC = NSHostingController(rootView: view.frame(width: device.width, height: device.height))
+        hostingVC.view.frame = CGRect(x: 0, y: 0, width: device.width, height: device.height)
         hostingVC.view.layoutSubtreeIfNeeded()
         assertSnapshot(
             of: hostingVC,
