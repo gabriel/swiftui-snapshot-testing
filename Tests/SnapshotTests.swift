@@ -4,7 +4,7 @@ import SwiftUISnapshotTesting
 import Testing
 
 @Test @MainActor
-func testTextView() throws {
+func testTextViewSnapshot() throws {
     let view = Text("Hello, world!")
         .frame(width: 300, height: 200)
     assertSnapshot(view: view)
@@ -27,11 +27,13 @@ func testSomeLongView() throws {
     assertSnapshot(view: view)
 }
 
-@Test @MainActor
-func testScrollView() throws {
-    let view = ScrollView {}
-    assertSnapshot(view: view)
-}
+#if os(macOS)
+    @Test @MainActor
+    func testScrollView() throws {
+        let view = ScrollView {}
+        assertSnapshot(view: view)
+    }
+#endif
 
 struct NavigationView: View {
     var body: some View {
@@ -44,7 +46,7 @@ struct NavigationView: View {
 }
 
 @Test @MainActor
-func testNavigationStack() throws {
+func testNavigationStackSnapshot() throws {
     let view = NavigationView()
         .frame(width: 600, height: 1000)
     assertSnapshot(view: view)
@@ -54,4 +56,37 @@ func testNavigationStack() throws {
 func testNavigationStackRender() throws {
     let view = NavigationView()
     assertRender(view: view)
+}
+
+@Test @MainActor
+func testNavigationSplitViewSnapshot() throws {
+    let view = SplitView()
+        .frame(width: 1000, height: 1000)
+    assertSnapshot(view: view)
+}
+
+// Render is not supported on UIKit views
+// @Test @MainActor
+// func testNavigationSplitViewRender() throws {
+//     let view = SplitView()
+//         .frame(width: 1000, height: 1000)
+//     assertRender(view: view)
+// }
+
+struct SplitView: View {
+    var body: some View {
+        NavigationSplitView {
+            Text("Sidebar")
+        } content: {
+            ScrollView {
+                Spacer()
+                Text("Content")
+                Spacer()
+            }
+        } detail: {
+            VStack {
+                Text("Detail")
+            }
+        }
+    }
 }

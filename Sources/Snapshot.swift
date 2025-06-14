@@ -23,7 +23,6 @@ import SwiftUI
         )
     }
 #else
-    // On macOS assertSnapshot isn't supported, so we use assertRender instead (alias)
     @MainActor
     public func assertSnapshot(
         view: some View,
@@ -33,11 +32,15 @@ import SwiftUI
         line: UInt = #line,
         column: UInt = #column
     ) {
-        assertRender(
-            view: view,
+        let hostingVC = NSHostingController(rootView: view)
+        hostingVC.view.frame = CGRect(x: 0, y: 0, width: 1024, height: 768)
+        hostingVC.view.layoutSubtreeIfNeeded()
+        assertSnapshot(
+            of: hostingVC,
+            as: .image,
             fileID: fileID,
             file: file,
-            testName: testName,
+            testName: "\(testName).\(platformLabel)",
             line: line,
             column: column
         )
