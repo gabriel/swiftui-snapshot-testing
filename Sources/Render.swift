@@ -30,7 +30,7 @@ public func assertRender(
 
     assertSnapshot(
         of: view.frame(width: device.width, height: device.height),
-        as: .imageRender,
+        as: .imageRender(precision: 1.0, perceptualPrecision: 0.99), // ImageRenderer is not precise enough
         fileID: fileID,
         file: file,
         testName: "\(testName).\(platformLabel)",

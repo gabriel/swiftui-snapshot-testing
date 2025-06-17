@@ -78,3 +78,34 @@ struct SplitTestView: View {
         }
     }
 }
+
+// Run multiple text render tests to ensure the renderer is stable
+@Test @MainActor
+func testTextRender1() throws {
+    let view =
+        Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")
+            .font(.largeTitle)
+            .foregroundColor(.blue)
+            .background(.red)
+    assertRender(view: view, device: .any)
+}
+
+@Test @MainActor
+func testTextRender2() throws {
+    let view =
+        Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")
+            .font(.largeTitle)
+            .foregroundColor(.blue)
+            .background(.red)
+    assertRender(view: view, device: .any)
+}
+
+@Test @MainActor
+func testTextRender3() throws {
+    let view =
+        Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")
+            .font(.largeTitle)
+            .foregroundColor(.blue)
+            .background(.red)
+    assertRender(view: view, device: .any)
+}
