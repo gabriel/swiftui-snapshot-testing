@@ -14,9 +14,8 @@ import SwiftUI
         column: UInt = #column
     ) {
         switch device {
-        case .iOS: ()
-        case .any: ()
-        default:
+        case .iOS, .any, .size: ()
+        case .macOS:
             // Noop
             return
         }
@@ -43,9 +42,8 @@ import SwiftUI
         column: UInt = #column
     ) {
         switch device {
-        case .macOS: ()
-        case .any: ()
-        default:
+        case .macOS, .any, .size: ()
+        case .iOS:
             // Noop
             return
         }

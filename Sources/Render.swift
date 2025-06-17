@@ -14,17 +14,15 @@ public func assertRender(
 ) {
     #if os(iOS)
         switch device {
-        case .iOS: ()
-        case .any: ()
-        default:
+        case .iOS, .any, .size: ()
+        case .macOS:
             // Noop
             return
         }
     #elseif os(macOS)
         switch device {
-        case .macOS: ()
-        case .any: ()
-        default:
+        case .macOS, .any, .size: ()
+        case .iOS:
             // Noop
             return
         }
