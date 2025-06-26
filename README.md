@@ -2,7 +2,7 @@
 
 A Swift package that provides snapshot testing capabilities for SwiftUI views on both iOS and macOS platforms. This package extends the functionality of [swift-snapshot-testing](https://github.com/pointfreeco/swift-snapshot-testing) to make it easier to test cross platform SwiftUI views.
 
-- For pure SwiftUI views use `assertRender(view: view)`. This uses ImageRenderer API.
+- For pure SwiftUI views use `assertRender(view: view)`. This uses the [ImageRenderer API](https://developer.apple.com/documentation/swiftui/imagerenderer).
 - For UIKit based SwiftUI views, use `assertSnapshot(view: view)`.
 - To wait for view tasks, use `try #require(await expression { model.loaded })`
 
