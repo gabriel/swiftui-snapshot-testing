@@ -7,6 +7,9 @@ import SwiftUI
     public func assertSnapshot(
         view: some View,
         device: SnapshotDevice,
+        named name: String? = nil,
+        record recording: Bool? = nil,
+        timeout: TimeInterval = 5,
         fileID: StaticString = #fileID,
         file: StaticString = #filePath,
         testName: String = #function,
@@ -23,6 +26,9 @@ import SwiftUI
         assertSnapshot(
             of: view.frame(width: device.width, height: device.height),
             as: .image,
+            named: name,
+            record: recording,
+            timeout: timeout,
             fileID: fileID,
             file: file,
             testName: "\(testName).\(platformLabel)",
@@ -35,6 +41,9 @@ import SwiftUI
     public func assertSnapshot(
         view: some View,
         device: SnapshotDevice,
+        named name: String? = nil,
+        record recording: Bool? = nil,
+        timeout: TimeInterval = 5,
         fileID: StaticString = #fileID,
         file: StaticString = #filePath,
         testName: String = #function,
@@ -54,6 +63,9 @@ import SwiftUI
         assertSnapshot(
             of: hostingVC,
             as: .image,
+            named: name,
+            record: recording,
+            timeout: timeout,
             fileID: fileID,
             file: file,
             testName: "\(testName).\(platformLabel)",
