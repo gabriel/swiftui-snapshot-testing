@@ -3,21 +3,22 @@ import SwiftUI
 import SwiftUISnapshotTesting
 import Testing
 
-@Suite("Snapshot tests") // .snapshots(record: .failed))
+@MainActor
+@Suite("Snapshot tests", .snapshots(record: .failed))
 struct SnapshotTests {
-    @Test @MainActor
+    @Test
     func testTextViewSnapshot() throws {
         let view = Text("Hello, world!")
         assertSnapshot(view: view, device: .size(300, 200))
     }
 
-    @Test @MainActor
+    @Test
     func testTextViewRender() throws {
         let view = Text("Hello, world!")
         assertRender(view: view, device: .size(300, 200))
     }
 
-    @Test @MainActor
+    @Test
     func testSomeLongView() throws {
         let view = VStack {
             ForEach(0 ..< 100) { index in
@@ -27,7 +28,7 @@ struct SnapshotTests {
         assertSnapshot(view: view, device: .iOS(width: 300, height: 2000))
     }
 
-    @Test @MainActor
+    @Test
     func testScrollView() throws {
         let view = ScrollView {}
         assertSnapshot(view: view, device: .macOS(width: 800, height: 600))
@@ -43,20 +44,20 @@ struct SnapshotTests {
         }
     }
 
-    @Test @MainActor
+    @Test
     func testNavigationStackSnapshot() throws {
         let view = NavigationTestView()
         assertSnapshot(view: view, device: .iOS(width: 400, height: 1000))
         assertSnapshot(view: view, device: .macOS(width: 1200, height: 800))
     }
 
-    @Test @MainActor
+    @Test
     func testNavigationStackRender() throws {
         let view = NavigationTestView()
         assertRender(view: view, device: .macOS(width: 1200, height: 800))
     }
 
-    @Test @MainActor
+    @Test
     func testNavigationSplitViewSnapshot() throws {
         let view = SplitTestView()
         assertSnapshot(view: view, device: .iOS(width: 400, height: 1000))
@@ -82,7 +83,7 @@ struct SnapshotTests {
     }
 
     // Run multiple text render tests to ensure the renderer is stable
-    @Test @MainActor
+    @Test
     func testTextRender1() throws {
         let view =
         Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")
@@ -92,7 +93,7 @@ struct SnapshotTests {
         assertRender(view: view, device: .any)
     }
 
-    @Test @MainActor
+    @Test
     func testTextRender2() throws {
         let view =
         Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")
@@ -102,7 +103,7 @@ struct SnapshotTests {
         assertRender(view: view, device: .any)
     }
 
-    @Test @MainActor
+    @Test
     func testTextRender3() throws {
         let view =
         Text("Iceland wayfarers fam, austin taxidermy pok pok bruh viral try-hard")

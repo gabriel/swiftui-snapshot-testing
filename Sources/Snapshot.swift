@@ -1,6 +1,9 @@
 import Foundation
 import SnapshotTesting
 import SwiftUI
+#if os(macOS)
+    import AppKit
+#endif
 
 #if os(iOS)
     @MainActor
@@ -57,12 +60,17 @@ import SwiftUI
             return
         }
 
-        let hostingVC = NSHostingController(rootView: view.frame(width: device.width, height: device.height))
-        hostingVC.view.frame = CGRect(x: 0, y: 0, width: device.width, height: device.height)
-        hostingVC.view.layoutSubtreeIfNeeded()
+        let size = CGSize(width: device.width, height: device.height)
+        let hostingView = NSHostingView(rootView: view.frame(width: size.width, height: size.height))
+        hostingView.setFrameSize(size)
+        // Force light appearance to avoid dark mode issues
+        if let lightAppearance = NSAppearance(named: .aqua) {
+            hostingView.appearance = lightAppearance
+        }
+        hostingView.layoutSubtreeIfNeeded()
         assertSnapshot(
-            of: hostingVC,
-            as: .image,
+            of: hostingView,
+            as: .image(size: size),
             named: name,
             record: recording,
             timeout: timeout,
