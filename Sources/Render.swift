@@ -35,7 +35,7 @@ public func assertRender(
         of: view.frame(width: device.width, height: device.height),
         as: .imageRender(precision: 1.0, perceptualPrecision: 0.99), // ImageRenderer is not precise enough
         named: name,
-        record: recording,
+        record: recording.map { $0 ? SnapshotTestingConfiguration.Record.all : .missing },
         timeout: timeout,
         fileID: fileID,
         file: file,

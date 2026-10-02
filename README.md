@@ -130,3 +130,56 @@ Then..
 ```sh
 swift test --ios
 ```
+
+### Comparing bounded pixel regions
+
+Use `.regionalImage(tolerating:)` when a measured rendering variation is confined
+to specific bitmap pixels. This strategy works with `NSImage` on macOS and
+`UIImage` on iOS, and retains Point-Free's PNG encoding and reference, failure,
+and difference attachments.
+
+```swift
+import SnapshotTesting
+import SwiftUISnapshotTesting
+
+let glyphs = SnapshotToleranceRegion(
+    rectangles: [
+        SnapshotPixelRect(x: 40, y: 20, width: 32, height: 32),
+        SnapshotPixelRect(x: 40, y: 80, width: 32, height: 32),
+    ],
+    maximumRGBDelta: 2,
+    maximumChangedPixels: 100
+)
+assertSnapshot(of: image, as: .regionalImage(tolerating: [glyphs]))
+```
+
+Coordinates address the underlying bitmap's rows and columns, starting at zero,
+with exclusive right and bottom edges. They are pixels, independent of view
+points or `UIImage.scale`. Images are normalized to sRGB premultiplied RGBA8.
+RGB deltas use the 0–255 channel range; alpha must always match exactly. Every
+pixel outside the rectangles must match exactly, including rows after them.
+
+Each region's changed-pixel cap is shared across all its rectangles and rows.
+A pixel with changes to multiple RGB channels counts once. Overlapping rectangles
+within one region form a union; rectangles from different regions must not
+overlap. `maximumReferenceAlpha` can additionally restrict tolerated changes to
+translucent pixels, without rejecting unchanged opaque pixels.
+
+For existing decoded RGBA8 data, avoid image conversion with the lower-level API:
+
+```swift
+let reference = try SnapshotPixelBuffer(
+    width: width, height: height, bytesPerRow: referenceStride, data: referenceRGBA
+)
+let actual = try SnapshotPixelBuffer(
+    width: width, height: height, bytesPerRow: actualStride, data: actualRGBA
+)
+let matches = try actual.matches(reference, tolerating: [glyphs])
+```
+
+Raw buffers must use the same color space and alpha representation. Row padding
+is ignored and strides may differ. Invalid dimensions, incomplete buffers,
+out-of-bounds rectangles, negative caps, and conflicting regions throw; the
+image strategy reports them as comparison failures. Exact images, rows, and
+spans use bulk `memcmp`; only changed permitted spans enter the byte loop.
+Existing snapshot strategies keep their existing comparison behavior.
