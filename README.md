@@ -88,6 +88,36 @@ func testAsyncTask() async throws {
 }
 ```
 
+### macOS backing scale and existing bitmaps
+
+Native macOS snapshots use a fixed 2× backing scale for both the offscreen
+hosting window and the output bitmap. A 300×200 point view produces a 600×400
+pixel image on either a 1× or 2× display. Set `backingScale: 1` for 1× output:
+
+```swift
+assertSnapshot(view: MyView(), device: .macOS(width: 300, height: 200), backingScale: 1)
+```
+
+The renderer retains the existing light AppKit appearance and briefly settles
+initial native layout. It does not wait for application tasks; keep using
+`expression` for async readiness. Older macOS references captured on a 1×
+display must be reviewed against the chosen fixed scale before recording.
+References from 2× displays keep their existing pixel dimensions.
+
+To reuse a rendered image with another comparison strategy, call
+`try snapshotImage(view:size:backingScale:)`. Invalid dimensions or scale throw.
+To compare an existing `NSImage`, use the image overload:
+
+```swift
+let image = try snapshotImage(view: MyView(), size: CGSize(width: 300, height: 200))
+assertSnapshot(image: image)
+```
+
+`assertSnapshot(image:)` compares the bitmap directly, preserving its pixels
+and point size without re-hosting or resampling it. It retains the same macOS
+snapshot naming and exact pixel comparison as the view overload. These APIs
+are macOS-only; iOS rendering is unchanged.
+
 ## Features
 
 - Support for both iOS and macOS platforms, via `swift test` and `xcodebuild test`.
