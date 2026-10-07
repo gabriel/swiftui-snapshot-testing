@@ -44,6 +44,7 @@ import SwiftUI
     public func assertSnapshot(
         view: some View,
         device: SnapshotDevice,
+        backingScale: CGFloat = 2,
         named name: String? = nil,
         record recording: Bool? = nil,
         timeout: TimeInterval = 5,
@@ -60,25 +61,37 @@ import SwiftUI
             return
         }
 
-        let size = CGSize(width: device.width, height: device.height)
-        let hostingView = NSHostingView(rootView: view.frame(width: size.width, height: size.height))
-        hostingView.setFrameSize(size)
-        // Force light appearance to avoid dark mode issues
-        if let lightAppearance = NSAppearance(named: .aqua) {
-            hostingView.appearance = lightAppearance
-        }
-        hostingView.layoutSubtreeIfNeeded()
         assertSnapshot(
-            of: hostingView,
-            as: .image(size: size),
+            image: try snapshotImage(view: view, size: CGSize(width: device.width, height: device.height),
+                                     backingScale: backingScale),
             named: name,
-            record: recording.map { $0 ? SnapshotTestingConfiguration.Record.all : .missing },
+            record: recording,
             timeout: timeout,
             fileID: fileID,
             file: file,
-            testName: "\(testName).\(platformLabel)",
+            testName: testName,
             line: line,
             column: column
         )
+    }
+
+    /// Compare an existing bitmap without hosting or resampling it.
+    @MainActor
+    public func assertSnapshot(
+        image: @autoclosure () throws -> NSImage,
+        named name: String? = nil,
+        record recording: Bool? = nil,
+        timeout: TimeInterval = 5,
+        fileID: StaticString = #fileID,
+        file: StaticString = #filePath,
+        testName: String = #function,
+        line: UInt = #line,
+        column: UInt = #column
+    ) {
+        SnapshotTesting.assertSnapshot(
+            of: try image(), as: .image, named: name,
+            record: recording.map { $0 ? SnapshotTestingConfiguration.Record.all : .missing },
+            timeout: timeout, fileID: fileID, file: file,
+            testName: "\(testName).\(platformLabel)", line: line, column: column)
     }
 #endif
